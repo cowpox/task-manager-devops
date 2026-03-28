@@ -1,0 +1,20 @@
+-- Criação das tabelas do Devops Task Manager
+
+-- Tabela categoria
+CREATE TABLE categoria(
+	id SERIAL primary KEY,
+	nome VARCHAR(100) NOT NULL
+);
+
+-- Tabela Tarefas
+CREATE TABLE tarefas(
+	id SERIAL primary KEY,
+	titulo VARCHAR(50) NOT NULL, --poderia ser nulo, tarefa sem nome
+	descricao VARCHAR(200) NOT NULL,
+	data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	data_prevista_conclusao TIMESTAMP,
+	data_conclusao TIMESTAMP,
+	status VARCHAR(50) NOT NULL,
+	categoria_id INT NOT NULL,
+	FOREIGN KEY (categoria_id) REFERENCES categoria(id)
+);
