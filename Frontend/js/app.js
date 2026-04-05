@@ -262,12 +262,26 @@ async function deleteTask(taskId) {
 }
 
 async function createCategory() {
-    const name = document.getElementById('categoryName').value.trim().toLowerCase();
+    const name = document.getElementById('categoryName').value.trim();
 
-    if (!name || categories.includes(name)) {
+    if (!name) {
+        alert('Categoria inválida');
+        return;
+    }
+
+    const jaExiste = categories.some(c =>
+        c.nome.toLowerCase() === name.toLowerCase()
+    );
+
+    if (jaExiste) {
         alert('Categoria inválida ou existente');
         return;
     }
+
+    let categoriaCriada = {
+        id: Date.now(),
+        nome: name
+    };
 
     if (usandoBancoDeDados) {
         try {
@@ -277,16 +291,22 @@ async function createCategory() {
                 body: JSON.stringify({ nome: name })
             });
 
-            await parseApiResponse(response);
+            const json = await parseApiResponse(response);
+            categoriaCriada = json.data;
         } catch (e) {
             alert(`Erro ao salvar categoria:\n${e.message}`);
             return;
         }
     }
 
-    categories.push(name);
+    categories.push({
+        id: categoriaCriada.id,
+        nome: categoriaCriada.nome
+    });
+
+    const key = normalizeCategoryKey(categoriaCriada.nome);
     const colorIndex = (categories.length - 1) % availableColors.length;
-    categoryColors[name] = availableColors[colorIndex];
+    categoryColors[key] = availableColors[colorIndex];
 
     preencherSelectCategorias();
     renderCategoryFilters();
@@ -504,7 +524,7 @@ function renderTasks() {
         const status = statusConfig[task.status] || statusConfig['PENDENTE'];
         const categoryClass = categoryColors[normalizeCategoryKey(task.categoryName)] || 'text-gray-600 border-gray-200 bg-gray-50';
 
-        const categoryTagHTML = task.category
+        const categoryTagHTML = task.categoryId && task.categoryName
             ? `<span class="px-2.5 py-1 rounded-lg text-xs font-medium border ${categoryClass} flex items-center gap-1 max-w-[120px]">
                  <i data-lucide="tag" class="w-3 h-3 flex-shrink-0"></i>
                  <span class="truncate">${task.categoryName}</span>
