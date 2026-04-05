@@ -84,7 +84,7 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<ApiResponseDTO<TaskResponseDTO>> criar(@Valid @RequestBody TaskRequestDTO dto) {
-        Category category = buscarCategoriaOuFalhar(dto.getCategoriaNome());
+        Category category = buscarCategoriaOuFalhar(dto.getCategoriaId());
 
         Task task = DtoMapper.toTask(dto, category);
         Task criada = taskService.criar(task);
@@ -98,7 +98,7 @@ public class TaskController {
         taskService.buscarPorId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada."));
 
-        Category category = buscarCategoriaOuFalhar(dto.getCategoriaNome());
+        Category category = buscarCategoriaOuFalhar(dto.getCategoriaId());
 
         Task task = DtoMapper.toTask(dto, category);
         task.setId(id);
@@ -130,8 +130,8 @@ public class TaskController {
         return ResponseEntity.ok(ApiResponseDTO.success("Tarefa excluída com sucesso.", null));
     }
 
-    private Category buscarCategoriaOuFalhar(String nomeCategoria) {
-        return categoryService.buscarPorNome(nomeCategoria)
+    private Category buscarCategoriaOuFalhar(Long categoriaId) {
+        return categoryService.buscarPorId(categoriaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada."));
     }
 

@@ -1,7 +1,9 @@
 package br.com.projeto.taskmanager.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
@@ -21,20 +23,20 @@ public class TaskRequestDTO {
     )
     private String status;
 
-    @NotBlank(message = "O nome da categoria é obrigatório.")
-    @Size(max = 100, message = "O nome da categoria deve ter no máximo 100 caracteres.")
-    private String categoriaNome;
+    @NotNull(message = "O id da categoria é obrigatório.")
+    @Positive(message = "O id da categoria deve ser maior que zero.")
+    private Long categoriaId;
 
     private LocalDateTime dataPrevistaConclusao;
 
     public TaskRequestDTO() {
     }
 
-    public TaskRequestDTO(String titulo, String descricao, String status, String categoriaNome, LocalDateTime dataPrevistaConclusao) {
+    public TaskRequestDTO(String titulo, String descricao, String status, Long categoriaId, LocalDateTime dataPrevistaConclusao) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.status = status;
-        this.categoriaNome = categoriaNome;
+        this.categoriaId = categoriaId;
         this.dataPrevistaConclusao = dataPrevistaConclusao;
     }
 
@@ -62,12 +64,12 @@ public class TaskRequestDTO {
         this.status = status;
     }
 
-    public String getCategoriaNome() {
-        return categoriaNome;
+    public Long getCategoriaId() {
+        return categoriaId;
     }
 
-    public void setCategoriaNome(String categoriaNome) {
-        this.categoriaNome = categoriaNome;
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
     }
 
     public LocalDateTime getDataPrevistaConclusao() {

@@ -5,11 +5,16 @@ const API_URL = 'http://localhost:8080/api';
 let usandoBancoDeDados = false; // Flag que indica se o backend esta online
 
 // DADOS MOCK (usado para testes sem o backend)
-let categories = ['trabalho', 'pessoal', 'estudos', 'saude'];
+let categories = [
+    { id: 1, nome: 'Trabalho' },
+    { id: 2, nome: 'Pessoal' },
+    { id: 3, nome: 'Estudos' },
+    { id: 4, nome: 'Saúde' }
+];
 let tasks = [
-    { id: 1, title: "Revisar relatório", description: "Preparar apresentação", status: "PENDENTE", category: "trabalho", date: "2026-04-09" },
-    { id: 2, title: "Estudar React", description: "Completar módulo", status: "EM_ANDAMENTO", category: "estudos", date: "2026-04-12" },
-    { id: 3, title: "Consulta médica", description: "Check-up de rotina", status: "CONCLUIDA", category: "saude", date: "2026-04-05" }
+    { id: 1, title: "Revisar relatório", description: "Preparar apresentação", status: "PENDENTE", categoryId: 1, categoryName: "Trabalho", date: "2026-04-09" },
+    { id: 2, title: "Estudar React", description: "Completar módulo", status: "EM_ANDAMENTO", categoryId: 3, categoryName: "Estudos", date: "2026-04-12" },
+    { id: 3, title: "Consulta médica", description: "Check-up de rotina", status: "CONCLUIDA", categoryId: 4, categoryName: "Saúde", date: "2026-04-05" }
 ];
 
 // CONFIGURAÇÕES DE UI E FILTROS
@@ -77,21 +82,22 @@ async function parseApiResponse(response) {
 // =====================================
 async function loadDataDaAPI() {
     try {
-        // Busca as categorias do banco
         const catRes = await fetch(`${API_URL}/categorias`);
         const catJson = await parseApiResponse(catRes);
         const dbCategories = catJson.data || [];
 
-        categories = dbCategories.map(c => c.nome.toLowerCase());
+        categories = dbCategories.map(c => ({
+            id: c.id,
+            nome: c.nome
+        }));
 
-        // Garante cores para categorias novas
         categories.forEach((cat, index) => {
-            if (!categoryColors[cat]) {
-                categoryColors[cat] = availableColors[index % availableColors.length];
+            const key = normalizeCategoryKey(cat.nome);
+            if (!categoryColors[key]) {
+                categoryColors[key] = availableColors[index % availableColors.length];
             }
         });
 
-        // Busca as tarefas do banco
         const taskRes = await fetch(`${API_URL}/tarefas?page=0&size=100&sortBy=dataCriacao&sortDir=desc`);
         const taskJson = await parseApiResponse(taskRes);
         const dbTasks = taskJson.data?.content || [];
@@ -101,7 +107,8 @@ async function loadDataDaAPI() {
             title: t.titulo,
             description: t.descricao,
             status: t.status,
-            category: t.categoria ? t.categoria.nome.toLowerCase() : '',
+            categoryId: t.categoria ? t.categoria.id : null,
+            categoryName: t.categoria ? t.categoria.nome : '',
             date: t.dataPrevistaConclusao ? t.dataPrevistaConclusao.split('T')[0] : ''
         }));
 
@@ -118,6 +125,14 @@ async function loadDataDaAPI() {
     renderTasks();
 }
 
+function normalizeCategoryKey(nome) {
+    return (nome || '').trim().toLowerCase();
+}
+
+function getCategoryById(id) {
+    return categories.find(c => String(c.id) === String(id)) || null;
+}
+
 function preencherSelectCategorias() {
     const select = document.getElementById('taskCategory');
     if (!select) return;
@@ -127,12 +142,12 @@ function preencherSelectCategorias() {
 
     categories.forEach(cat => {
         const option = document.createElement('option');
-        option.value = cat;
-        option.textContent = getCategoryLabel(cat);
+        option.value = cat.id;
+        option.textContent = cat.nome;
         select.appendChild(option);
     });
 
-    if (categories.includes(valorAtual)) {
+    if (categories.some(c => String(c.id) === String(valorAtual))) {
         select.value = valorAtual;
     }
 }
@@ -140,20 +155,23 @@ function preencherSelectCategorias() {
 async function createTask() {
     const title = document.getElementById('taskTitle').value.trim();
     const description = document.getElementById('taskDescription').value.trim();
-    const category = document.getElementById('taskCategory').value;
+    const categoryId = document.getElementById('taskCategory').value;
     const date = document.getElementById('taskDate').value;
 
-    if (!title || !description || !category) {
+    if (!title || !description || !categoryId) {
         alert('Por favor, preencha o Título, a Descrição e a Categoria para criar uma tarefa!');
         return;
     }
+
+    const categoriaSelecionada = getCategoryById(categoryId);
 
     const novaTarefaFrontend = {
         id: Date.now(),
         title,
         description,
         status: 'PENDENTE',
-        category,
+        categoryId: Number(categoryId),
+        categoryName: categoriaSelecionada ? categoriaSelecionada.nome : '',
         date
     };
 
@@ -166,7 +184,7 @@ async function createTask() {
                     titulo: title,
                     descricao: description,
                     status: 'PENDENTE',
-                    categoriaNome: category,
+                    categoriaId: Number(categoryId),
                     dataPrevistaConclusao: date ? `${date}T12:00:00` : null
                 })
             });
@@ -176,7 +194,8 @@ async function createTask() {
 
             novaTarefaFrontend.id = dbTask.id;
             novaTarefaFrontend.status = dbTask.status;
-            novaTarefaFrontend.category = dbTask.categoria ? dbTask.categoria.nome.toLowerCase() : category;
+            novaTarefaFrontend.categoryId = dbTask.categoria ? dbTask.categoria.id : Number(categoryId);
+            novaTarefaFrontend.categoryName = dbTask.categoria ? dbTask.categoria.nome : novaTarefaFrontend.categoryName;
             novaTarefaFrontend.date = dbTask.dataPrevistaConclusao
                 ? dbTask.dataPrevistaConclusao.split('T')[0]
                 : date;
@@ -428,11 +447,12 @@ function renderCategoryFilters() {
   `;
 
     categories.forEach(cat => {
-        const isActive = currentCategoryFilter === cat;
+        const isActive = String(currentCategoryFilter) === String(cat.id);
+
         html += `
-          <div onclick="filterByCategory('${cat}')" class="category-pill cursor-pointer ${isActive ? 'bg-primary text-white' : 'bg-white text-gray-600'} border ${isActive ? 'border-primary' : 'border-gray-200'} px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 group" data-category="${cat}">
-            <span>${getCategoryLabel(cat)}</span>
-            <span onclick="event.stopPropagation(); deleteCategory('${cat}')" class="text-gray-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100" title="Excluir categoria">
+          <div onclick="filterByCategory('${cat.id}')" class="category-pill cursor-pointer ${isActive ? 'bg-primary text-white' : 'bg-white text-gray-600'} border ${isActive ? 'border-primary' : 'border-gray-200'} px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 group" data-category="${cat.id}">
+            <span>${cat.nome}</span>
+            <span onclick="event.stopPropagation(); deleteCategory('${cat.id}')" class="text-gray-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100" title="Excluir categoria">
               <i data-lucide="x" class="w-3.5 h-3.5"></i>
             </span>
           </div>
@@ -458,7 +478,7 @@ function renderTasks() {
 
     let filtered = tasks.filter(task => {
         const matchesStatus = currentStatusFilter === 'all' || task.status === currentStatusFilter;
-        const matchesCategory = currentCategoryFilter === 'all' || task.category === currentCategoryFilter;
+        const matchesCategory = currentCategoryFilter === 'all' || String(task.categoryId) === String(currentCategoryFilter);
         const q = searchQuery.toLowerCase();
         const matchesSearch =
             task.title.toLowerCase().includes(q) ||
@@ -482,12 +502,12 @@ function renderTasks() {
 
     grid.innerHTML = filtered.map(task => {
         const status = statusConfig[task.status] || statusConfig['PENDENTE'];
-        const categoryClass = categoryColors[task.category] || 'text-gray-600 border-gray-200 bg-gray-50';
+        const categoryClass = categoryColors[normalizeCategoryKey(task.categoryName)] || 'text-gray-600 border-gray-200 bg-gray-50';
 
         const categoryTagHTML = task.category
             ? `<span class="px-2.5 py-1 rounded-lg text-xs font-medium border ${categoryClass} flex items-center gap-1 max-w-[120px]">
                  <i data-lucide="tag" class="w-3 h-3 flex-shrink-0"></i>
-                 <span class="truncate">${getCategoryLabel(task.category)}</span>
+                 <span class="truncate">${task.categoryName}</span>
                </span>`
             : `<span></span>`;
 

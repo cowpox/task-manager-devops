@@ -43,18 +43,17 @@ public class DtoMapper {
     }
 
     public static Task toTask(TaskRequestDTO dto, Category category) {
-        if (dto == null) {
-            return null;
-        }
-
         Task task = new Task();
+
         task.setTitulo(dto.getTitulo());
         task.setDescricao(dto.getDescricao());
+        task.setCategoriaId(category.getId());
         task.setDataPrevistaConclusao(dto.getDataPrevistaConclusao());
-        task.setCategoriaId(category != null ? category.getId() : null);
 
         if (dto.getStatus() != null && !dto.getStatus().isBlank()) {
-            task.setStatus(TaskStatus.valueOf(dto.getStatus().trim().toUpperCase(Locale.ROOT)));
+            task.setStatus(TaskStatus.valueOf(dto.getStatus().trim().toUpperCase()));
+        } else {
+            task.setStatus(TaskStatus.PENDENTE);
         }
 
         return task;
