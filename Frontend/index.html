@@ -1,252 +1,248 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Manager Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        primary: '#7C3AED',
-                        primaryLight: '#8B5CF6',
-                        primaryDark: '#6D28D9',
-                    }
-                }
-            }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            primary: '#7C3AED',
+            primaryLight: '#8B5CF6',
+            primaryDark: '#6D28D9',
+          }
         }
-    </script>
-    <link rel="stylesheet" href="css/style.css">
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="bg-gray-50 min-h-screen font-sans text-gray-800">
-
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-
+  
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    
     <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 animate-fade-in">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
-                <i data-lucide="check" class="w-6 h-6 text-white"></i>
-            </div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Task Manager</h1>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
+          <i data-lucide="check" class="w-6 h-6 text-white"></i>
         </div>
-        <button onclick="openModal('taskModal')" class="btn-primary bg-primary hover:bg-primaryDark text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-lg shadow-primary/25">
-            <i data-lucide="plus" class="w-5 h-5"></i>
-            <span>Nova Tarefa</span>
-        </button>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Task Manager</h1>
+      </div>
+      <button onclick="openModal('taskModal')" class="btn-primary bg-primary hover:bg-primaryDark text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-lg shadow-primary/25">
+        <i data-lucide="plus" class="w-5 h-5"></i>
+        <span>Nova Tarefa</span>
+      </button>
     </header>
 
     <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6 animate-fade-in" style="animation-delay: 0.05s;">
-        <div class="stat-card active bg-white rounded-2xl p-4 shadow-sm border-2 border-primary" onclick="filterByStatus('all')">
-            <div class="flex items-center gap-2 mb-2">
-                <div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
-                <span class="text-sm text-gray-500 font-medium">Todas</span>
-            </div>
-            <p class="text-3xl font-bold text-gray-900" id="count-all">9</p>
+      <div class="stat-card active bg-white rounded-2xl p-4 shadow-sm border-2 border-primary" onclick="filterByStatus('all')">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+          <span class="text-sm text-gray-500 font-medium">Todas</span>
         </div>
-        <div class="stat-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100" onclick="filterByStatus('PENDENTE')">
-            <div class="flex items-center gap-2 mb-2">
-                <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
-                <span class="text-sm text-gray-500 font-medium">A Fazer</span>
-            </div>
-            <p class="text-3xl font-bold text-gray-900" id="count-PENDENTE">4</p>
+        <p class="text-3xl font-bold text-gray-900" id="count-all">9</p>
+      </div>
+      <div class="stat-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100" onclick="filterByStatus('todo')">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+          <span class="text-sm text-gray-500 font-medium">A Fazer</span>
         </div>
-        <div class="stat-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100" onclick="filterByStatus('EM_ANDAMENTO')">
-            <div class="flex items-center gap-2 mb-2">
-                <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
-                <span class="text-sm text-gray-500 font-medium">Em Andamento</span>
-            </div>
-            <p class="text-3xl font-bold text-gray-900" id="count-EM_ANDAMENTO">3</p>
+        <p class="text-3xl font-bold text-gray-900" id="count-todo">4</p>
+      </div>
+      <div class="stat-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100" onclick="filterByStatus('inprogress')">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+          <span class="text-sm text-gray-500 font-medium">Em Andamento</span>
         </div>
-        <div class="stat-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100" onclick="filterByStatus('CONCLUIDA')">
-            <div class="flex items-center gap-2 mb-2">
-                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-                <span class="text-sm text-gray-500 font-medium">Concluídas</span>
-            </div>
-            <p class="text-3xl font-bold text-gray-900" id="count-CONCLUIDA">1</p>
+        <p class="text-3xl font-bold text-gray-900" id="count-inprogress">3</p>
+      </div>
+      <div class="stat-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100" onclick="filterByStatus('completed')">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+          <span class="text-sm text-gray-500 font-medium">Concluídas</span>
         </div>
-        <div class="stat-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100" onclick="filterByStatus('CANCELADA')">
-            <div class="flex items-center gap-2 mb-2">
-                <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
-                <span class="text-sm text-gray-500 font-medium">Canceladas</span>
-            </div>
-            <p class="text-3xl font-bold text-gray-900" id="count-CANCELADA">1</p>
+        <p class="text-3xl font-bold text-gray-900" id="count-completed">1</p>
+      </div>
+      <div class="stat-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100" onclick="filterByStatus('cancelled')">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+          <span class="text-sm text-gray-500 font-medium">Canceladas</span>
         </div>
+        <p class="text-3xl font-bold text-gray-900" id="count-cancelled">1</p>
+      </div>
     </section>
 
     <section class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-4 animate-fade-in" style="animation-delay: 0.1s;">
-        <div class="flex-1 relative">
-            <i data-lucide="search" class="w-5 h-5 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-            <input type="text" id="searchInput" placeholder="Buscar tarefas..."
-                   class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
-        </div>
-        <div class="flex items-center gap-2 bg-white rounded-xl p-1 border border-gray-200">
-            <button onclick="setView('grid')" id="btn-grid" class="view-toggle-btn flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white font-medium">
-                <i data-lucide="layout-grid" class="w-4 h-4"></i>
-                <span class="hidden sm:inline">Grade</span>
-            </button>
-            <button onclick="setView('list')" id="btn-list" class="view-toggle-btn flex items-center gap-2 px-4 py-2 rounded-lg text-gray-500 hover:text-gray-700 font-medium">
-                <i data-lucide="list" class="w-4 h-4"></i>
-                <span class="hidden sm:inline">Lista</span>
-            </button>
-        </div>
+      <div class="flex-1 relative">
+        <i data-lucide="search" class="w-5 h-5 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+        <input type="text" id="searchInput" placeholder="Buscar tarefas..." 
+          class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
+      </div>
+      <div class="flex items-center gap-2 bg-white rounded-xl p-1 border border-gray-200">
+        <button onclick="setView('grid')" id="btn-grid" class="view-toggle-btn flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white font-medium">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Grade</span>
+        </button>
+        <button onclick="setView('list')" id="btn-list" class="view-toggle-btn flex items-center gap-2 px-4 py-2 rounded-lg text-gray-500 hover:text-gray-700 font-medium">
+          <i data-lucide="list" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Lista</span>
+        </button>
+      </div>
     </section>
 
     <section id="categoryFiltersContainer" class="flex flex-wrap items-center gap-2 mb-6 animate-fade-in" style="animation-delay: 0.15s;">
-    </section>
+      </section>
 
     <section id="taskGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in" style="animation-delay: 0.2s;">
-    </section>
+      </section>
 
     <div id="emptyState" class="hidden flex-col items-center justify-center py-16 text-center">
-        <div class="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
-            <i data-lucide="clipboard-list" class="w-10 h-10 text-gray-400"></i>
-        </div>
-        <h3 class="text-lg font-semibold text-gray-700 mb-1">Nenhuma tarefa encontrada</h3>
-        <p class="text-gray-500">Crie uma nova tarefa para começar</p>
+      <div class="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
+        <i data-lucide="clipboard-list" class="w-10 h-10 text-gray-400"></i>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-700 mb-1">Nenhuma tarefa encontrada</h3>
+      <p class="text-gray-500">Crie uma nova tarefa para começar</p>
     </div>
-</div>
+  </div>
 
-<div id="taskModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 glass-effect">
+  <div id="taskModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 glass-effect">
     <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
-        <div class="p-6 border-b border-gray-100">
-            <div class="flex items-start justify-between">
-                <div>
-                    <h2 class="text-xl font-bold text-gray-900">Nova Tarefa</h2>
-                    <p class="text-sm text-gray-500 mt-1">Preencha os dados da nova tarefa</p>
-                </div>
-                <button onclick="closeModal('taskModal')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
+      <div class="p-6 border-b border-gray-100">
+        <div class="flex items-start justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-gray-900">Nova Tarefa</h2>
+            <p class="text-sm text-gray-500 mt-1">Preencha os dados da nova tarefa</p>
+          </div>
+          <button onclick="closeModal('taskModal')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
         </div>
-        <div class="p-6 space-y-5">
-            <div>
-                <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                    <i data-lucide="diamond" class="w-4 h-4 text-primary"></i>
-                    Título da Tarefa
-                </label>
-                <input type="text" id="taskTitle" maxlength="50" placeholder="Ex: Revisar relatório mensal"
-                       class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all">
-            </div>
-            <div>
-                <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                    <i data-lucide="align-left" class="w-4 h-4 text-primary"></i>
-                    Descrição
-                </label>
-                <textarea id="taskDescription" rows="3" maxlength="200" placeholder="Descreva os detalhes da tarefa..."
-                          class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all resize-none"></textarea>
-            </div>
-            <div>
-                <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                    <i data-lucide="tag" class="w-4 h-4 text-primary"></i>
-                    Categoria
-                </label>
-                <select id="taskCategory"
-                        class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all appearance-none cursor-pointer">
-                    <option value="">Selecione uma categoria</option>
-                    <option value="trabalho">Trabalho</option>
-                    <option value="pessoal">Pessoal</option>
-                    <option value="estudos">Estudos</option>
-                    <option value="saude">Saúde</option>
-                </select>
-            </div>
-            <div>
-                <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                    <i data-lucide="calendar" class="w-4 h-4 text-primary"></i>
-                    Data Prevista de Conclusão
-                </label>
-                <div class="relative">
-                    <input type="date" id="taskDate"
-                           class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all">
-                </div>
-            </div>
+      </div>
+      <div class="p-6 space-y-5">
+        <div>
+          <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+            <i data-lucide="diamond" class="w-4 h-4 text-primary"></i>
+            Título da Tarefa
+          </label>
+          <input type="text" id="taskTitle" maxlength="50" placeholder="Ex: Revisar relatório mensal" 
+            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all">
         </div>
-        <div class="p-6 border-t border-gray-100 flex justify-end gap-3">
-            <button onclick="closeModal('taskModal')" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
-                Cancelar
-            </button>
-            <button onclick="createTask()" class="btn-primary px-5 py-2.5 rounded-xl bg-primary text-white font-medium shadow-lg shadow-primary/25">
-                Criar Tarefa
-            </button>
+        <div>
+          <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+            <i data-lucide="align-left" class="w-4 h-4 text-primary"></i>
+            Descrição
+          </label>
+          <textarea id="taskDescription" rows="3" maxlength="200" placeholder="Descreva os detalhes da tarefa..." 
+            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all resize-none"></textarea>
         </div>
+        <div>
+          <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+            <i data-lucide="tag" class="w-4 h-4 text-primary"></i>
+            Categoria
+          </label>
+          <select id="taskCategory" 
+            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all appearance-none cursor-pointer">
+            <option value="">Selecione uma categoria</option>
+          </select>
+        </div>
+        <div>
+          <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-primary"></i>
+            Data Prevista de Conclusão
+          </label>
+          <div class="relative">
+            <input type="date" id="taskDate" 
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all">
+          </div>
+        </div>
+      </div>
+      <div class="p-6 border-t border-gray-100 flex justify-end gap-3">
+        <button onclick="closeModal('taskModal')" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+          Cancelar
+        </button>
+        <button onclick="createTask()" class="btn-primary px-5 py-2.5 rounded-xl bg-primary text-white font-medium shadow-lg shadow-primary/25">
+          Criar Tarefa
+        </button>
+      </div>
     </div>
-</div>
+  </div>
 
-<div id="categoryModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 glass-effect">
+  <div id="categoryModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 glass-effect">
     <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-        <div class="p-6 border-b border-gray-100">
-            <div class="flex items-start justify-between">
-                <div>
-                    <h2 class="text-xl font-bold text-gray-900">Nova Categoria</h2>
-                    <p class="text-sm text-gray-500 mt-1">Crie uma nova categoria para organizar suas tarefas</p>
-                </div>
-                <button onclick="closeModal('categoryModal')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
+      <div class="p-6 border-b border-gray-100">
+        <div class="flex items-start justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-gray-900">Nova Categoria</h2>
+            <p class="text-sm text-gray-500 mt-1">Crie uma nova categoria para organizar suas tarefas</p>
+          </div>
+          <button onclick="closeModal('categoryModal')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
         </div>
-        <div class="p-6">
-            <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                <i data-lucide="tag" class="w-4 h-4 text-primary"></i>
-                Nome da Categoria
-            </label>
-            <input type="text" id="categoryName" maxlength="30" placeholder="Ex: Marketing"
-                   class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all">
-        </div>
-        <div class="p-6 border-t border-gray-100 flex justify-end gap-3">
-            <button onclick="closeModal('categoryModal')" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
-                Cancelar
-            </button>
-            <button onclick="createCategory()" class="btn-primary px-5 py-2.5 rounded-xl bg-primary text-white font-medium shadow-lg shadow-primary/25">
-                Criar Categoria
-            </button>
-        </div>
+      </div>
+      <div class="p-6">
+        <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+          <i data-lucide="tag" class="w-4 h-4 text-primary"></i>
+          Nome da Categoria
+        </label>
+        <input type="text" id="categoryName" maxlength="30" placeholder="Ex: Marketing" 
+          class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all">
+      </div>
+      <div class="p-6 border-t border-gray-100 flex justify-end gap-3">
+        <button onclick="closeModal('categoryModal')" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+          Cancelar
+        </button>
+        <button onclick="createCategory()" class="btn-primary px-5 py-2.5 rounded-xl bg-primary text-white font-medium shadow-lg shadow-primary/25">
+          Criar Categoria
+        </button>
+      </div>
     </div>
-</div>
+  </div>
 
-<div id="deleteCategoryModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 glass-effect">
+  <div id="deleteCategoryModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 glass-effect">
     <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-        <div class="p-6 border-b border-gray-100">
-            <div class="flex items-start justify-between">
-                <div>
-                    <h2 class="text-xl font-bold text-gray-900">Excluir Categoria</h2>
-                    <p id="deleteCategoryMessage" class="text-sm text-gray-500 mt-1">O que deseja fazer com as tarefas?</p>
-                </div>
-                <button onclick="closeModal('deleteCategoryModal')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
+      <div class="p-6 border-b border-gray-100">
+        <div class="flex items-start justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-gray-900">Excluir Categoria</h2>
+            <p id="deleteCategoryMessage" class="text-sm text-gray-500 mt-1">O que deseja fazer com as tarefas?</p>
+          </div>
+          <button onclick="closeModal('deleteCategoryModal')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
         </div>
-        <div class="p-6">
-            <div id="transferCategoryDiv">
-                <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                    <i data-lucide="arrow-right-left" class="w-4 h-4 text-primary"></i>
-                    Transferir tarefas para:
-                </label>
-                <select id="transferCategorySelect" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all appearance-none cursor-pointer">
-                </select>
-            </div>
+      </div>
+      <div class="p-6">
+        <div id="transferCategoryDiv">
+          <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+            <i data-lucide="arrow-right-left" class="w-4 h-4 text-primary"></i>
+            Transferir tarefas para:
+          </label>
+          <select id="transferCategorySelect" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all appearance-none cursor-pointer">
+            </select>
         </div>
-        <div class="p-6 border-t border-gray-100 flex justify-end gap-3 flex-wrap sm:flex-nowrap">
-            <button onclick="confirmDeleteCategoryAction('delete')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-red-200 text-red-600 font-medium hover:bg-red-50 transition-colors">
-                Excluir Tudo
-            </button>
-            <button id="btnTransferAndDelete" onclick="confirmDeleteCategoryAction('transfer')" class="w-full sm:w-auto btn-primary px-5 py-2.5 rounded-xl bg-primary text-white font-medium shadow-lg shadow-primary/25">
-                Transferir e Excluir
-            </button>
-        </div>
+      </div>
+      <div class="p-6 border-t border-gray-100 flex justify-end gap-3 flex-wrap sm:flex-nowrap">
+        <button onclick="confirmDeleteCategoryAction('delete')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-red-200 text-red-600 font-medium hover:bg-red-50 transition-colors">
+          Excluir Tudo
+        </button>
+        <button id="btnTransferAndDelete" onclick="confirmDeleteCategoryAction('transfer')" class="w-full sm:w-auto btn-primary px-5 py-2.5 rounded-xl bg-primary text-white font-medium shadow-lg shadow-primary/25">
+          Transferir e Excluir
+        </button>
+      </div>
     </div>
-</div>
+  </div>
 
-<script src="js/app.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
