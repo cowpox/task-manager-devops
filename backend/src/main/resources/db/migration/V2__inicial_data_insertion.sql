@@ -1,9 +1,12 @@
+
+
 -- Inserindo categorias iniciais
 INSERT INTO categoria (nome) VALUES
                                  ('Infraestrutura'),
                                  ('Desenvolvimento'),
                                  ('Segurança'),
-                                 ('Documentação');
+                                 ('Documentação')
+                            ON CONFLICT (nome) DO NOTHING;
 
 -- Inserindo tarefas de exemplo
 INSERT INTO tarefa (titulo, descricao, status, categoria_id, data_prevista_conclusao)
