@@ -23,7 +23,7 @@ jobs:
           java-version: '17'
 
       - name: Compilar com Maven
-        run: mvn -B package --file git/backend/pom.xml
+        run: mvn -B package --file git/backend/scr/pom.xml
 
       - name: Rodar testes
-        run: mvn test --file git/backend/pom.xml
+        run: mvn test --file git/backend/scr/pom.xml
