@@ -1,7 +1,7 @@
 lucide.createIcons();
 
 // Configuração da API
-const API_URL = 'http://localhost:8080/api';
+const API_URL = '/api';
 let usandoBancoDeDados = false; // Flag que indica se o backend esta online
 
 // Mapeamento de Status:
@@ -599,24 +599,41 @@ function setView(view) {
 }
 
 function openModal(modalId) {
-  document.getElementById(modalId).classList.add('active');
-  document.body.style.overflow = 'hidden';
-  if (modalId === 'taskModal') {
-    document.getElementById('taskTitle').value = '';
-    document.getElementById('taskDescription').value = '';
-    document.getElementById('taskDate').value = '';
-    document.getElementById('taskCategory').value = '';
-  }
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.classList.remove('active');
+    });
+
+    document.getElementById(modalId).classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    if (modalId === 'taskModal') {
+        document.getElementById('taskTitle').value = '';
+        document.getElementById('taskDescription').value = '';
+        document.getElementById('taskDate').value = '';
+        document.getElementById('taskCategory').value = '';
+    }
 }
 
 function closeModal(modalId) {
-  document.getElementById(modalId).classList.remove('active');
-  document.body.style.overflow = '';
-  if (modalId === 'taskModal') {
-    ['taskTitle', 'taskDescription', 'taskCategory', 'taskDate'].forEach(id => document.getElementById(id).value = '');
-  } else {
-    document.getElementById('categoryName').value = '';
-  }
+    document.getElementById(modalId).classList.remove('active');
+
+    const hasActiveModal = document.querySelector('.modal-overlay.active');
+    document.body.style.overflow = hasActiveModal ? 'hidden' : '';
+
+    if (modalId === 'taskModal') {
+        ['taskTitle', 'taskDescription', 'taskCategory', 'taskDate'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
+    }
+
+    if (modalId === 'categoryModal') {
+        document.getElementById('categoryName').value = '';
+    }
+
+    if (modalId === 'deleteCategoryModal') {
+        document.getElementById('transferCategorySelect').value = '';
+        categoryToDeleteName = '';
+    }
 }
 
 document.getElementById('searchInput').addEventListener('input', (e) => { searchQuery = e.target.value; renderTasks(); });
