@@ -25,8 +25,11 @@ class TaskTest {
     @Test
     void testGetters() {
         Task task = new Task(
+                1L,
                 "Estudar",
                 "DevOps",
+                null,
+                null,
                 null,
                 TaskStatus.PENDENTE,
                 1L
