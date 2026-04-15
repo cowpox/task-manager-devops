@@ -165,6 +165,21 @@ Execução em:
 
 ---
 
+## 📦 Release
+
+Versão: **v1.0.0**
+
+### Entregas:
+- CRUD completo de tarefas e categorias
+- Regras de negócio implementadas
+- API REST funcional
+- CI/CD com GitHub Actions
+- Deploy automatizado no Render
+
+🔗 https://github.com/cowpox/task-manager-devops/releases/tag/v1.0.0
+
+---
+
 ## ▶️ Como Executar Localmente
 
 ### Pré-requisitos
